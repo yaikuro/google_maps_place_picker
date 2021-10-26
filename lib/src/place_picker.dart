@@ -61,6 +61,7 @@ class PlacePicker extends StatefulWidget {
     this.automaticallyImplyAppBarLeading = true,
     this.autocompleteOnTrailingWhitespace = false,
     this.hidePlaceDetailsWhenDraggingPin = true,
+    this.useCameraLocationAsCoordinates = false,
   }) : super(key: key);
 
   final String apiKey;
@@ -165,6 +166,8 @@ class PlacePicker extends StatefulWidget {
   final bool autocompleteOnTrailingWhitespace;
 
   final bool hidePlaceDetailsWhenDraggingPin;
+
+  final bool useCameraLocationAsCoordinates;
 
   @override
   _PlacePickerState createState() => _PlacePickerState();
@@ -334,7 +337,8 @@ class _PlacePickerState extends State<PlacePicker> {
     // Prevents searching again by camera movement.
     provider!.isAutoCompleteSearching = true;
 
-    await _moveTo(provider!.selectedPlace!.geometry!.location.lat, provider!.selectedPlace!.geometry!.location.lng);
+    await _moveTo(provider!.selectedPlace!.geometry!.location.lat,
+        provider!.selectedPlace!.geometry!.location.lng);
 
     provider!.placeSearchingState = SearchingState.Idle;
   }
@@ -370,7 +374,8 @@ class _PlacePickerState extends State<PlacePicker> {
               if (provider!.currentPosition == null) {
                 return _buildMap(widget.initialPosition);
               } else {
-                return _buildMap(LatLng(provider!.currentPosition!.latitude, provider!.currentPosition!.longitude));
+                return _buildMap(LatLng(
+                    provider!.currentPosition!.latitude, provider!.currentPosition!.longitude));
               }
             }
           });
@@ -423,6 +428,7 @@ class _PlacePickerState extends State<PlacePicker> {
         searchBarController.reset();
       },
       onPlacePicked: widget.onPlacePicked,
+      useCameraLocationAsCoordinates: widget.useCameraLocationAsCoordinates,
     );
   }
 }

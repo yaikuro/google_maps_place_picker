@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget voilaBackButton(BuildContext context) {
+Widget voilaBackButton(BuildContext context, {Color? color}) {
   return Padding(
     padding: EdgeInsets.all(12.0),
     child: Container(
@@ -14,7 +14,7 @@ Widget voilaBackButton(BuildContext context) {
         ),
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
-          backgroundColor: Color(0xffEE2528),
+          backgroundColor: color ?? Color(0xffEE2528),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       ),

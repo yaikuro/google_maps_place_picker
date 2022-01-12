@@ -9,8 +9,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:google_maps_place_picker/providers/place_provider.dart';
 import 'package:google_maps_place_picker/src/components/animated_pin.dart';
-import 'package:google_maps_place_picker/src/components/floating_card.dart';
-import 'package:google_maps_place_picker/src/place_picker.dart';
 import 'package:google_maps_webservice/geocoding.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:provider/provider.dart';
@@ -86,7 +84,8 @@ class GoogleMapPlacePicker extends StatelessWidget {
     // We don't want to search location again if camera location is changed by zooming in/out.
     if (forceSearchOnZoomChanged == false &&
         provider.prevCameraPosition != null &&
-        provider.prevCameraPosition!.target.latitude == provider.cameraPosition!.target.latitude &&
+        provider.prevCameraPosition!.target.latitude ==
+            provider.cameraPosition!.target.latitude &&
         provider.prevCameraPosition!.target.longitude ==
             provider.cameraPosition!.target.longitude) {
       provider.placeSearchingState = SearchingState.Idle;
@@ -95,14 +94,16 @@ class GoogleMapPlacePicker extends StatelessWidget {
 
     provider.placeSearchingState = SearchingState.Searching;
 
-    final GeocodingResponse response = await provider.geocoding.searchByLocation(
+    final GeocodingResponse response =
+        await provider.geocoding.searchByLocation(
       Location(
           lat: provider.cameraPosition!.target.latitude,
           lng: provider.cameraPosition!.target.longitude),
       language: language,
     );
 
-    if (response.errorMessage?.isNotEmpty == true || response.status == "REQUEST_DENIED") {
+    if (response.errorMessage?.isNotEmpty == true ||
+        response.status == "REQUEST_DENIED") {
       print("Camera Location Search Error: " + response.errorMessage!);
       if (onSearchFailed != null) {
         onSearchFailed!(response.status);
@@ -112,14 +113,16 @@ class GoogleMapPlacePicker extends StatelessWidget {
     }
 
     if (usePlaceDetailSearch!) {
-      final PlacesDetailsResponse detailResponse = await provider.places.getDetailsByPlaceId(
+      final PlacesDetailsResponse detailResponse =
+          await provider.places.getDetailsByPlaceId(
         response.results[0].placeId,
         language: language,
       );
 
       if (detailResponse.errorMessage?.isNotEmpty == true ||
           detailResponse.status == "REQUEST_DENIED") {
-        print("Fetching details by placeId Error: " + detailResponse.errorMessage!);
+        print("Fetching details by placeId Error: " +
+            detailResponse.errorMessage!);
         if (onSearchFailed != null) {
           onSearchFailed!(detailResponse.status);
         }
@@ -127,9 +130,11 @@ class GoogleMapPlacePicker extends StatelessWidget {
         return;
       }
 
-      provider.selectedPlace = PickResult.fromPlaceDetailResult(detailResponse.result);
+      provider.selectedPlace =
+          PickResult.fromPlaceDetailResult(detailResponse.result);
     } else {
-      provider.selectedPlace = PickResult.fromGeocodingResult(response.results[0]);
+      provider.selectedPlace =
+          PickResult.fromGeocodingResult(response.results[0]);
     }
 
     if (useCameraLocationAsCoordinates!) {
@@ -169,7 +174,8 @@ class GoogleMapPlacePicker extends StatelessWidget {
         selector: (_, provider) => provider.mapType,
         builder: (_, data, __) {
           PlaceProvider provider = PlaceProvider.of(context, listen: false);
-          CameraPosition initialCameraPosition = CameraPosition(target: initialTarget, zoom: 15);
+          CameraPosition initialCameraPosition =
+              CameraPosition(target: initialTarget, zoom: 15);
 
           return GoogleMap(
             myLocationButtonEnabled: false,
@@ -205,7 +211,8 @@ class GoogleMapPlacePicker extends StatelessWidget {
                   if (provider.debounceTimer?.isActive ?? false) {
                     provider.debounceTimer!.cancel();
                   }
-                  provider.debounceTimer = Timer(Duration(milliseconds: debounceMilliseconds!), () {
+                  provider.debounceTimer =
+                      Timer(Duration(milliseconds: debounceMilliseconds!), () {
                     _searchByCameraLocation(provider);
                   });
                 }
@@ -235,7 +242,8 @@ class GoogleMapPlacePicker extends StatelessWidget {
             // gestureRecognizers make it possible to navigate the map when it's a
             // child in a scroll view e.g ListView, SingleChildScrollView...
             gestureRecognizers: Set()
-              ..add(Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer())),
+              ..add(Factory<EagerGestureRecognizer>(
+                  () => EagerGestureRecognizer())),
           );
         });
   }
@@ -248,7 +256,9 @@ class GoogleMapPlacePicker extends StatelessWidget {
           if (pinBuilder == null) {
             return _defaultPinBuilder(context, state);
           } else {
-            return Builder(builder: (builderContext) => pinBuilder!(builderContext, state));
+            return Builder(
+                builder: (builderContext) =>
+                    pinBuilder!(builderContext, state));
           }
         },
       ),
@@ -289,7 +299,8 @@ class GoogleMapPlacePicker extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                AnimatedPin(child: Icon(Icons.place, size: 36, color: Colors.red)),
+                AnimatedPin(
+                    child: Icon(Icons.place, size: 36, color: Colors.red)),
                 SizedBox(height: 42),
               ],
             ),
@@ -310,13 +321,18 @@ class GoogleMapPlacePicker extends StatelessWidget {
   }
 
   Widget _buildFloatingCard() {
-    return Selector<PlaceProvider, Tuple4<PickResult?, SearchingState, bool, PinState>>(
-      selector: (_, provider) => Tuple4(provider.selectedPlace, provider.placeSearchingState,
-          provider.isSearchBarFocused, provider.pinState),
+    return Selector<PlaceProvider,
+        Tuple4<PickResult?, SearchingState, bool, PinState>>(
+      selector: (_, provider) => Tuple4(
+          provider.selectedPlace,
+          provider.placeSearchingState,
+          provider.isSearchBarFocused,
+          provider.pinState),
       builder: (context, data, __) {
         if ((data.item1 == null && data.item2 == SearchingState.Idle) ||
             data.item3 == true ||
-            data.item4 == PinState.Dragging && this.hidePlaceDetailsWhenDraggingPin!) {
+            data.item4 == PinState.Dragging &&
+                this.hidePlaceDetailsWhenDraggingPin!) {
           return Container();
         } else {
           if (selectedPlaceWidgetBuilder == null) {
@@ -331,7 +347,8 @@ class GoogleMapPlacePicker extends StatelessWidget {
     );
   }
 
-  Widget _defaultPlaceWidgetBuilder(BuildContext context, PickResult? data, SearchingState state) {
+  Widget _defaultPlaceWidgetBuilder(
+      BuildContext context, PickResult? data, SearchingState state) {
     return FloatingCard(
       bottomPosition: MediaQuery.of(context).size.height * 0.05,
       leftPosition: MediaQuery.of(context).size.width * 0.025,
@@ -389,7 +406,8 @@ class GoogleMapPlacePicker extends StatelessWidget {
   }
 
   Widget _buildMapIcons(BuildContext context) {
-    final RenderBox appBarRenderBox = appBarKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox appBarRenderBox =
+        appBarKey.currentContext!.findRenderObject() as RenderBox;
 
     return Positioned(
       top: appBarRenderBox.size.height,

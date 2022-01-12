@@ -14,7 +14,6 @@ import 'package:google_maps_place_picker/src/utils/uuid.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
-import 'dart:io' show Platform;
 
 enum PinState { Preparing, Idle, Dragging }
 enum SearchingState { Idle, Searching }
@@ -63,8 +62,10 @@ class PlacePicker extends StatefulWidget {
     this.autocompleteOnTrailingWhitespace = false,
     this.hidePlaceDetailsWhenDraggingPin = true,
     this.useCameraLocationAsCoordinates = false,
+    this.backButtonBackgroundColor,
   }) : super(key: key);
 
+  final Color? backButtonBackgroundColor;
   final String apiKey;
 
   final LatLng initialPosition;
@@ -278,7 +279,7 @@ class _PlacePickerState extends State<PlacePicker> {
     return Row(
       children: <Widget>[
         widget.automaticallyImplyAppBarLeading
-            ? voilaBackButton(context)
+            ? voilaBackButton(context, color: widget.backButtonBackgroundColor)
             : SizedBox(width: 15),
         Expanded(
           child: AutoCompleteSearch(

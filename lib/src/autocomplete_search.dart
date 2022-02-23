@@ -106,7 +106,7 @@ class AutoCompleteSearchState extends State<AutoCompleteSearch> {
             ? Colors.black54
             : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        elevation: 8.0,
+        elevation: 2.0,
         child: Row(
           children: <Widget>[
             SizedBox(width: 10),
